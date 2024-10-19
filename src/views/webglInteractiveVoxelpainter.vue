@@ -6,15 +6,16 @@
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 import { ref, onMounted, onUnmounted } from "vue";
 import HThree from "../utils/HThree";
-let HThreeInstance, panel;
+import { GridHelper } from "three";
+let HThreeInstance: HThree, panel;
 const webglContainerRef = ref<HTMLElement | null>(null);
 const options = {
   camera: {
-    position: [-5, 3, 10],
-    lookAt: [0, 2, 0],
+    position: [500, 800, 1300],
+    lookAt: [0, 0, 0],
   },
   scene: {
-    background: 0xa0a0a0,
+    background: 0xf0f0f0,
     fog: {
       color: 0xa0a0a0,
       near: 10,
@@ -23,20 +24,8 @@ const options = {
   },
   objects: [
     {
-      name: "Soldier",
-      type: "GLTFMesh",
-      options: {
-        path: "models/gltf/RobotExpressive/RobotExpressive.glb",
-        decoderPath: "jsm/libs/draco/gltf/",
-        mixer: {
-          isplay: true,
-        },
-      },
-      position: [0, 0, 0],
-      // scale: [1, 1, 1],
-    },
-    {
       type: "PlaneMesh",
+      geometry: [1000, 1000],
     },
   ],
   lights: [
@@ -72,36 +61,10 @@ onMounted(() => {
   if (!webglContainerRef.value) return;
   HThreeInstance = new HThree(webglContainerRef.value, options);
   HThreeInstance.on("onLoad", () => {
-    createPanel();
+    const gridHelper = new GridHelper(1000, 20);
+    HThreeInstance.scene.add(gridHelper);
   });
 });
-onUnmounted(() => {
-  panel && panel.destroy();
-});
-function createPanel() {
-  const model = HThreeInstance.getObjectName("Soldier");
-  const { meshAnimation } = model;
-  const settings: any = {};
-  //    parent: t,
-  //     autoPlace: i = void 0 === t,
-  //     container: e,
-  //     width: s,
-  //     title: n = "Controls",
-  panel = new GUI({
-    width: 310,
-    title: "模型",
-  });
-  console.log(panel);
-  const folder4 = panel.addFolder("动作");
-  meshAnimation.clipActions.forEach((action: any) => {
-    const { name } = action.getClip();
-    let key = name;
-    settings[key] = function () {
-      meshAnimation.selectClipAction(action);
-    };
-    folder4.add(settings, key);
-  });
-}
 </script>
 
 <style scoped>

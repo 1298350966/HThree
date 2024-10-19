@@ -42,6 +42,14 @@ const routes = [
       name: "webglAnimationSkinningMorph",
     },
   },
+  {
+    path: "/webglInteractiveVoxelpainter",
+    component: () => import("../views/webglInteractiveVoxelpainter.vue"),
+    meta: {
+      name: "webglInteractiveVoxelpainter",
+    },
+  },
+  ,
 ];
 
 export const meuns = (() => {
